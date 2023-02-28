@@ -1,0 +1,24 @@
+<script>
+	const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	document.documentElement.classList.toggle('dark', isDarkTheme);
+</script>
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<script src="https://kit.fontawesome.com/c5c44cf1ba.js" crossorigin="anonymous"></script>
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		<link href="https://fonts.googleapis.com/css?family=Inter" rel="stylesheet" />
+		<style>
+			body {
+				font-family: 'Inter';
+			}
+		</style>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover" class="bg-white dark:bg-black">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

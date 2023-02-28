@@ -2,9 +2,18 @@
 	import Section from '$lib/components/item.svelte';
 	import { onMount } from 'svelte';
 	import { invoke } from '@tauri-apps/api/tauri';
-	import { open } from '@tauri-apps/api/dialog';
 	let isDarkTheme: boolean;
-
+	const ids = [
+		'problem',
+		'solution',
+		'metrics',
+		'value',
+		'advantage',
+		'channels',
+		'customers',
+		'budget',
+		'revenue'
+	];
 	onMount(() => {
 		isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 	});
@@ -15,7 +24,6 @@
 	}
 
 	function save() {
-		const ids = ['problem', 'solution'];
 		let values: string[] = [];
 		let existing_ids: string[] = [];
 
@@ -36,12 +44,46 @@
 			values.push(textarea.value);
 		});
 
-		invoke('test_command', { values: values, ids: existing_ids });
+		const prjName = document.getElementById('main_name');
+
+		if (!prjName) {
+			return;
+		}
+
+
+		invoke('save_file', {
+			values: values,
+			ids: existing_ids,
+			name: prjName.textContent
+		});
 	}
 
 	async function load() {
-		const selected = await open({ multiple: false });
-		console.log(selected);
+		const content = await invoke('read_file');
+		if (content.data === '') {
+			return;
+		}
+		const json = JSON.parse(content.data);
+		const map = new Map(Object.entries(json));
+
+		map.forEach((v, k) => {
+			const parent = document.getElementById(k);
+
+			if (!parent) {
+				return;
+			}
+
+			let textarea = parent.querySelector('textarea');
+
+			if (!textarea) {
+				return;
+			}
+
+			textarea.value = v as string;
+		});
+
+		let name = document.getElementById("main_name");
+		name.textContent = content.name;
 	}
 </script>
 
@@ -53,6 +95,7 @@
 		<div
 			contenteditable
 			class="rounded-md bg-white1 p-1 px-2 text-black outline-none dark:bg-black1 dark:text-white"
+			id="main_name"
 		>
 			Unnamed
 		</div>

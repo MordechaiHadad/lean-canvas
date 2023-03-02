@@ -49,7 +49,7 @@ struct SaveFile {
 fn read_file() -> Option<SaveFile> {
     let (tx, rx) = std::sync::mpsc::channel();
 
-    FileDialogBuilder::new().pick_file(move |value| {
+    FileDialogBuilder::new().add_filter("Project File", &["txt"]).pick_file(move |value| {
         tx.send(value).unwrap();
     });
     if let Some(value) = rx.recv().unwrap() {

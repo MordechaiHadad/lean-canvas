@@ -50,7 +50,6 @@
 			return;
 		}
 
-
 		invoke('save_file', {
 			values: values,
 			ids: existing_ids,
@@ -82,7 +81,7 @@
 			textarea.value = v as string;
 		});
 
-		let name = document.getElementById("main_name");
+		let name = document.getElementById('main_name');
 		name.textContent = content.name;
 	}
 </script>
@@ -90,7 +89,7 @@
 <div>
 	<div class="toolbar mt-3 items-center justify-center gap-12">
 		<div
-			class="fa-solid fa-house text-center text-xl text-black transition duration-300 ease-in-out hover:text-primary dark:text-white"
+			class="fa-solid fa-house text-center text-xl text-black transition duration-300 ease-in-out hover:text-primary dark:hover:text-primary dark:text-white"
 		/>
 		<div
 			contenteditable
@@ -105,38 +104,24 @@
 				class="absolute hidden grid-cols-2 gap-2 rounded-md border border-white/10 bg-white1/50 p-2 text-black backdrop-blur-md group-hover:grid dark:border-black/10 dark:bg-black1/10 dark:text-white"
 				id="dropdown"
 			>
-				<div class="row-span-2 flex flex-col overflow-hidden rounded-md ">
+				<div class="row-span-2 flex flex-col overflow-hidden rounded-md shadow-md backdrop-blur-md">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<p class="bg-white p-2 hover:bg-white/50 dark:bg-black dark:hover:bg-black/50">New</p>
-					<p
-						class="bg-white p-2 hover:bg-white/50 dark:bg-black dark:hover:bg-black/50"
-						on:click={load}
-					>
-						Open
-					</p>
-					<p
-						class="border border-primary bg-white p-2 hover:bg-white/50 dark:bg-black dark:hover:bg-black/50"
-						on:click={save}
-					>
-						Save
-					</p>
-					<p class="bg-white p-2 hover:bg-white/50 dark:bg-black dark:hover:bg-black/50">Save As</p>
-					<p
-						class="border border-primary bg-white p-2 hover:bg-white/50 dark:bg-black dark:hover:bg-black/50"
-					>
-						About
-					</p>
+					<p class="p-2 hover:bg-white/70 dark:hover:bg-black/70">New</p>
+					<p class="p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={load}>Open</p>
+					<p class="p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={save}>Save</p>
+					<p class="p-2 hover:bg-white/70 dark:hover:bg-black/70">Save As</p>
+					<p class="p-2 hover:bg-white/70 dark:hover:bg-black/70">About</p>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
-					class="grid gap-1 rounded-md bg-white px-2 py-2 transition duration-200 ease-in-out hover:bg-white/50 dark:bg-black dark:hover:bg-black/50"
+					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
 					on:click={toggle_theme}
 				>
 					<i class="fa-solid fa-sun text-center" />
 					<p class="text-center">Toggle Theme</p>
 				</div>
 				<div
-					class="grid gap-1 rounded-md bg-white px-2 py-2 transition duration-200 ease-in-out hover:bg-white/50 dark:bg-black dark:hover:bg-black/50"
+					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
 				>
 					<i class="fa-solid fa-keyboard text-center" />
 					<p class="text-center">Keybinds</p>

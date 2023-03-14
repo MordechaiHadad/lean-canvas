@@ -82,7 +82,7 @@
 		});
 
 		let name = document.getElementById('main_name');
-		name.textContent = content.name;
+		name!.textContent = content.name;
 	}
 </script>
 
@@ -101,7 +101,7 @@
 		<div class="group cursor-pointer">
 			<i class="fa-solid fa-bars text-center text-xl text-black dark:text-white" />
 			<div
-				class="absolute hidden grid-cols-2 gap-2 rounded-md border border-white/10 bg-white1/50 p-2 text-black backdrop-blur-md group-hover:grid dark:border-black/10 dark:bg-black1/10 dark:text-white"
+				class="absolute hidden grid-cols-2 grid-rows-3 gap-2 rounded-md border border-white/10 bg-white1/50 p-2 text-black backdrop-blur-md group-hover:grid dark:border-black/10 dark:bg-black1/10 dark:text-white"
 				id="dropdown"
 			>
 				<div class="row-span-2 flex flex-col overflow-hidden rounded-md shadow-md backdrop-blur-md">
@@ -120,8 +120,12 @@
 					<i class="fa-solid fa-sun text-center" />
 					<p class="text-center">Toggle Theme</p>
 				</div>
+				<div class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70">
+					<p class="text-center">🇺🇸</p>
+					<p class="text-center">Change Language</p>
+				</div>
 				<div
-					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
+					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70 col-start-2"
 				>
 					<i class="fa-solid fa-keyboard text-center" />
 					<p class="text-center">Keybinds</p>

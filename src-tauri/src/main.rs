@@ -17,13 +17,7 @@ fn main() {
 
 #[tauri::command]
 fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
-    let mut map: HashMap<String, String> = HashMap::new();
-
-    for (key, value) in ids.iter().zip(values.iter()) {
-        map.insert(key.to_string(), value.to_string());
-    }
-
-    let json = serde_json::to_string(&map).unwrap();
+    let json = produce_json(&ids, &values);
 
     let (tx, rx) = std::sync::mpsc::channel();
 
@@ -40,22 +34,33 @@ fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
 }
 
 #[derive(Serialize)]
-struct SaveFile {
+struct DocumentFile {
     name: String,
-    data: String
+    data: String,
+}
+
+fn produce_json(ids: &Vec<String>, values: &Vec<String>) -> String {
+    let mut map: HashMap<String, String> = HashMap::new();
+
+    for (key, value) in ids.iter().zip(values.iter()) {
+        map.insert(key.to_string(), value.to_string());
+    }
+    serde_json::to_string(&map).unwrap()
 }
 
 #[tauri::command]
-fn read_file() -> Option<SaveFile> {
+fn read_file() -> Option<DocumentFile> {
     let (tx, rx) = std::sync::mpsc::channel();
 
-    FileDialogBuilder::new().add_filter("Project File", &["txt"]).pick_file(move |value| {
-        tx.send(value).unwrap();
-    });
+    FileDialogBuilder::new()
+        .add_filter("Project File", &["txt"])
+        .pick_file(move |value| {
+            tx.send(value).unwrap();
+        });
     if let Some(value) = rx.recv().unwrap() {
         let data = fs::read_to_string(value.clone()).unwrap();
         let name = value.file_stem().unwrap().to_string_lossy().to_string();
-        let save_file = SaveFile { name, data};
+        let save_file = DocumentFile { name, data };
         return Some(save_file);
     }
     None

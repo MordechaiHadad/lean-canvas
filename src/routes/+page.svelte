@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Section from '$lib/components/item.svelte';
+	import KeybindsMenu from '$lib/components/KeybindsMenu.svelte';
 	import { ThemeHandler, LanguageHandler, DocumentFile } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import en from "../locales/en.json";
@@ -39,6 +40,8 @@
 	}
 </script>
 
+<KeybindsMenu></KeybindsMenu>
+
 <div>
 	<div class="toolbar mt-3 items-center justify-center gap-12">
 		<div
@@ -71,20 +74,20 @@
 					on:click={themeHandler.toggle}
 				>
 					<i class="fa-solid fa-sun text-center" />
-					<p class="text-center">Toggle Theme</p>
+					<p class="text-center select-none">Toggle Theme</p>
 				</div>
 				<div
 					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
 					on:click={toggleLanguage}
 				>
 					<p class="text-center">🇺🇸</p>
-					<p class="text-center">Change Language</p>
+					<p class="text-center select-none">Change Language</p>
 				</div>
 				<div
 					class="col-start-2 grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
 				>
 					<i class="fa-solid fa-keyboard text-center" />
-					<p class="text-center">Keybinds</p>
+					<p class="text-center select-none">Keybinds</p>
 				</div>
 			</div>
 		</div>

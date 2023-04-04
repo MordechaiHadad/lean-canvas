@@ -60,10 +60,10 @@
 		"windows": [
 			{
 				"fullscreen": false,
-				"height": 600,
+				"height": 720,
 				"resizable": true,
-				"title": "lean-canvas",
-				"width": 800
+				"title": "Lean Canvas Editor",
+				"width": 1280
 			}
 		]
 	}

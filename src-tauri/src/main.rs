@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use std::{collections::HashMap, fs};
+use std::{collections::HashMap, fmt::format, fs};
 
 use serde::Serialize;
 use tauri::api::{dialog::FileDialogBuilder, file};
@@ -21,6 +21,11 @@ fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
 
     let (tx, rx) = std::sync::mpsc::channel();
 
+    if fs::metadata(format!("{name}.txt")).is_ok() {
+        fs::write(format!("{name}.txt"), json.clone()).unwrap();
+        return;
+    }
+
     FileDialogBuilder::new()
         .set_file_name(&name)
         .add_filter("Project File".to_string(), &["txt"])
@@ -32,6 +37,9 @@ fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
         fs::write(value, json).unwrap();
     }
 }
+
+#[tauri::command]
+fn save_to_file(ids: Vec<String>, values: Vec<String>, name: String) {}
 
 #[derive(Serialize)]
 struct DocumentFile {

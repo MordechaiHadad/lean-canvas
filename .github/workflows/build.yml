@@ -1,0 +1,44 @@
+name: Build Tauri App
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Tauri app with Cargo
+        run: yarn tauri build --features "tauri/cargo"
+
+      - name: Zip the artifacts
+        run: |
+          cd src-tauri/target/release
+          mv ./bundle ./platform-64
+          tar -czvf platform-64.zip platform-64
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: platform-64-${{ matrix.os }}
+          path: src-tauri/target/release/platform-64.zip

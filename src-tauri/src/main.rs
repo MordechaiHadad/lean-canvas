@@ -3,10 +3,10 @@
     windows_subsystem = "windows"
 )]
 
-use std::{collections::HashMap, fmt::format, fs};
+use std::{collections::HashMap, fs};
 
 use serde::Serialize;
-use tauri::api::{dialog::FileDialogBuilder, file};
+use tauri::api::dialog::FileDialogBuilder;
 
 fn main() {
     tauri::Builder::default()
@@ -16,15 +16,16 @@ fn main() {
 }
 
 #[tauri::command]
-fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
+fn save_file(ids: Vec<String>, values: Vec<String>, name: String, open_dialogue: bool) -> bool {
     let json = produce_json(&ids, &values);
 
     let (tx, rx) = std::sync::mpsc::channel();
 
-    if fs::metadata(format!("{name}.txt")).is_ok() {
+    if fs::metadata(format!("{name}.txt")).is_ok() && !open_dialogue {
         fs::write(format!("{name}.txt"), json.clone()).unwrap();
-        return;
+        return true; 
     }
+    
 
     FileDialogBuilder::new()
         .set_file_name(&name)
@@ -35,11 +36,12 @@ fn save_file(ids: Vec<String>, values: Vec<String>, name: String) {
 
     if let Some(value) = rx.recv().unwrap() {
         fs::write(value, json).unwrap();
+        return true;
     }
+
+    return false;
 }
 
-#[tauri::command]
-fn save_to_file(ids: Vec<String>, values: Vec<String>, name: String) {}
 
 #[derive(Serialize)]
 struct DocumentFile {

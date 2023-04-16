@@ -1,4 +1,17 @@
 import { invoke } from '@tauri-apps/api/tauri';
+import { confirm } from '@tauri-apps/api/dialog';
+
+export const ids = [
+	'problem',
+	'solution',
+	'metrics',
+	'value',
+	'advantage',
+	'channels',
+	'customers',
+	'budget',
+	'revenue'
+];
 
 export class ThemeHandler {
 	private isDark: boolean;
@@ -17,6 +30,7 @@ export class ThemeHandler {
 
 import he from '../locales/he.json';
 import en from '../locales/en.json';
+import type { NotificationHandler } from './NotificationHandler';
 
 export class LanguageHandler {
 	private _currentLang: string;
@@ -85,7 +99,16 @@ export class DocumentFile implements IDocumentFile {
 		return newFile;
 	}
 
-	async saveFile(ids: string[]) {
+	async saveFile(
+		ids: string[],
+		isDocumentModified: boolean,
+		notificationHandler: NotificationHandler,
+		openDialogue: boolean
+	) {
+		if (!isDocumentModified) {
+			return;
+		}
+
 		let values: string[] = [];
 		let existing_ids: string[] = [];
 
@@ -115,7 +138,30 @@ export class DocumentFile implements IDocumentFile {
 		await invoke('save_file', {
 			values: values,
 			ids: existing_ids,
-			name: prjName.textContent
+			name: prjName.textContent,
+			openDialogue: openDialogue
+		}).then((isSaved) => {
+			if (isSaved) {
+				notificationHandler.pushNotification(`Successfully saved file ${prjName.textContent}`);
+			}
 		});
 	}
+}
+
+export async function createNewFile() {
+	const confirmed = await confirm('Do you want to proceed? All unsaved data will be gone', 'Lean Canvas Editor');
+	if (!confirmed) {
+		return;
+	}
+
+	const sectionsDiv = document.getElementById('textbox-container');
+
+	const inputs = sectionsDiv?.getElementsByTagName('textarea');
+
+	for (let i = 0; i < inputs!.length; i++) {
+		inputs![i].value = '';
+	}
+
+	let name = document.getElementById('main_name');
+	name!.textContent = 'Unnamed';
 }

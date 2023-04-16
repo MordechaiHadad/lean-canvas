@@ -3,11 +3,11 @@
 
 	let isOpen = false;
 
-	function toggleMneu() {
+	export function toggleMenu() {
 		if (isOpen) {
-			document.getElementById(id)?.classList.remove('overflow-hidden');
+			document.getElementById(id)?.classList.replace("flex", "hidden");
 		} else {
-			document.getElementById(id)?.classList.add('overflow-hidden');
+			document.getElementById(id)?.classList.replace("hidden", "flex");
 		}
 
 		isOpen = !isOpen;
@@ -15,22 +15,15 @@
 </script>
 
 <div
-	class="bg-gray-800 fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-opacity-50 transition-opacity duration-300"
+	class="fixed inset-0 z-50 items-center justify-center hidden"
 	style="opacity: {isOpen ? 1 : 0}"
-	{id}
+	id={id}
 >
-	<div class="rounded-lg bg-white p-4">
-		<h1 class="mb-2 text-lg font-bold">Menu</h1>
-		<ul>
-			<li class="mb-2">
-				<a href="#" class="text-gray-800 hover:text-gray-700">Item 1</a>
-			</li>
-			<li class="mb-2">
-				<a href="#" class="text-gray-800 hover:text-gray-700">Item 2</a>
-			</li>
-			<li class="mb-2">
-				<a href="#" class="text-gray-800 hover:text-gray-700">Item 3</a>
-			</li>
-		</ul>
+	<div class="rounded-lg p-4 text-back dark:text-white bg-white1/60 dark:bg-black1/60 border-white/50 dark:border-black/50 backdrop-blur-md shadow-md">
+		<h1 class="mb-2 text-lg font-bold text-center">Keybinds Menu</h1>
+		<p><kbd>TAB</kbd> - Switch to the next textbox</p>
+		<p><kbd>Shift</kbd> + <kbd>TAB</kbd> - Switch to the previous textbox</p>
+		<button on:click={toggleMenu}>Close</button>
+
 	</div>
 </div>

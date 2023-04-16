@@ -1,32 +1,44 @@
 <script lang="ts">
 	import Section from '$lib/components/item.svelte';
 	import KeybindsMenu from '$lib/components/KeybindsMenu.svelte';
-	import { ThemeHandler, LanguageHandler, DocumentFile } from '$lib/utils.js';
+	import { ThemeHandler, LanguageHandler, DocumentFile, createNewFile } from '$lib/utils.js';
 	import { onMount } from 'svelte';
-	import en from "../locales/en.json";
+	import en from '../locales/en.json';
+	import { NotificationHandler } from '$lib/NotificationHandler';
 
-	const ids = [
-		'problem',
-		'solution',
-		'metrics',
-		'value',
-		'advantage',
-		'channels',
-		'customers',
-		'budget',
-		'revenue'
-	];
+	import { ids } from '$lib/utils.js';
 
-	let themeHandler: ThemeHandler; 
+	let themeHandler: ThemeHandler;
 	let languageHandler: LanguageHandler;
+	let keybindsMenu;
 
 	let language_strings = en;
+
+	let notificationHandler: NotificationHandler;
+
+	let isDocumentModified = false;
 
 	onMount(() => {
 		const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		themeHandler = new ThemeHandler(isDarkTheme);
+		notificationHandler = new NotificationHandler();
 
 		languageHandler = new LanguageHandler();
+
+		document.addEventListener('keydown', function (event) {
+			if (event.ctrlKey && event.key === 's') {
+				if (file !== undefined) {
+					file.saveFile(ids, isDocumentModified, notificationHandler, false);
+				}
+			}
+		});
+
+		const sectionsDiv = document.getElementById('textbox-container');
+		sectionsDiv?.addEventListener('input', () => {
+			if (!isDocumentModified) {
+				isDocumentModified = true;
+			}
+		});
 	});
 
 	function toggleLanguage() {
@@ -40,7 +52,7 @@
 	}
 </script>
 
-<KeybindsMenu></KeybindsMenu>
+<KeybindsMenu id={'keybinds-menu'} bind:this={keybindsMenu} />
 
 <div>
 	<div class="toolbar mt-3 items-center justify-center gap-12">
@@ -62,10 +74,20 @@
 			>
 				<div class="row-span-3 flex flex-col overflow-hidden rounded-md shadow-md backdrop-blur-md">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70">New</p>
+					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={createNewFile}>New</p>
 					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={loadFile}>Open</p>
-					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={() => file.saveFile(ids)}>Save</p>
-					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70">Save As</p>
+					<p
+						class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70"
+						on:click={() => file.saveFile(ids, isDocumentModified, notificationHandler, false)}
+					>
+						Save
+					</p>
+					<p
+						class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70"
+						on:click={() => file.saveFile(ids, isDocumentModified, notificationHandler, true)}
+					>
+						Save As
+					</p>
 					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70">About</p>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -74,26 +96,27 @@
 					on:click={themeHandler.toggle}
 				>
 					<i class="fa-solid fa-sun text-center" />
-					<p class="text-center select-none">Toggle Theme</p>
+					<p class="select-none text-center">Toggle Theme</p>
 				</div>
 				<div
 					class="grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
 					on:click={toggleLanguage}
 				>
 					<p class="text-center">🇺🇸</p>
-					<p class="text-center select-none">Change Language</p>
+					<p class="select-none text-center">Change Language</p>
 				</div>
 				<div
 					class="col-start-2 grid gap-1 rounded-md px-2 py-2 shadow-md backdrop-blur-md transition duration-200 ease-in-out hover:bg-white/70 dark:hover:bg-black/70"
+					on:click={keybindsMenu.toggleMenu}
 				>
 					<i class="fa-solid fa-keyboard text-center" />
-					<p class="text-center select-none">Keybinds</p>
+					<p class="select-none text-center">Keybinds</p>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="grid h-screen gap-1 p-4">
+	<div class="grid h-screen gap-1 p-4" id="textbox-container">
 		<div class="row-span-2 grid h-full auto-cols-fr grid-flow-col grid-rows-2 gap-2 gap-y-1">
 			<Section
 				classes={'row-span-2 col-span-1'}

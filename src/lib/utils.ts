@@ -148,8 +148,14 @@ export class DocumentFile implements IDocumentFile {
 	}
 }
 
-export async function createNewFile() {
-	const confirmed = await confirm('Do you want to proceed? All unsaved data will be gone', 'Lean Canvas Editor');
+export async function createNewFile(isDocumentModified: boolean) {
+	if (!isDocumentModified && areSectionsEmpty()) {
+		return;
+	}
+	const confirmed = await confirm(
+		'Do you want to proceed? All unsaved data will be gone',
+		'Lean Canvas Editor'
+	);
 	if (!confirmed) {
 		return;
 	}
@@ -164,4 +170,16 @@ export async function createNewFile() {
 
 	let name = document.getElementById('main_name');
 	name!.textContent = 'Unnamed';
+}
+
+function areSectionsEmpty(): boolean {
+	const sectionsDiv = document.getElementById('textbox-container');
+
+	const textareas = sectionsDiv!.getElementsByTagName('textarea');
+	for (let i = 0; i < textareas.length; i++) {
+		if (textareas[i].value.trim() !== '') {
+			return false;
+		}
+	}
+	return true;
 }

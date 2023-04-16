@@ -74,7 +74,7 @@
 			>
 				<div class="row-span-3 flex flex-col overflow-hidden rounded-md shadow-md backdrop-blur-md">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={createNewFile}>New</p>
+					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={() => createNewFile(isDocumentModified)}>New</p>
 					<p class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70" on:click={loadFile}>Open</p>
 					<p
 						class="h-11 p-2 hover:bg-white/70 dark:hover:bg-black/70"
